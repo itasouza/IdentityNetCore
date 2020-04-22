@@ -18,5 +18,9 @@ namespace IdentityNetCore.ViewModels
 
         [Required]
         public string Role { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
     }
 }

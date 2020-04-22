@@ -43,6 +43,19 @@ namespace IdentityNetCore.Configurations
             //auto mapper
             services.AddSingleton<IEmailSender, EmailSender>();
 
+            services.AddAuthorization(option => {
+
+                option.AddPolicy("MemberDep", p => {
+
+                    p.RequireClaim("Department", "Tech").RequireRole("Member");
+                });
+
+                option.AddPolicy("AdminDep", p => {
+
+                    p.RequireClaim("Department", "Tech").RequireRole("Admin");
+                });
+            });
+
             return services;
         }
     }

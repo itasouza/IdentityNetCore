@@ -1,5 +1,7 @@
-﻿@{
-    var loggedIn =  User.Identity.IsAuthenticated;
+﻿
+@{
+    var loggedIn = User.Identity.IsAuthenticated;
+   
 }
 
 @if (loggedIn)
@@ -8,7 +10,8 @@
         <a class="nav-link text-dark" asp-controller="Identity" asp-action="Signout">Sair</a>
     </li>
     <li class="nav-item">
-        <label>Hello @User.Identity.Name</label>
+        <a class="nav-link text-dark">Hello @User.Identity.Name (
+                                            @User.Claims.FirstOrDefault(c => c.Type == "Department"))</a>
     </li>
 }
 else

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityNetCore.Service;
 using IdentityNetCore.ViewModels;
@@ -61,7 +62,13 @@ namespace IdentityNetCore.Controllers
 
                     if (result.Succeeded)
                     {
+                         //adiciona o Claim
+                         var claim = new Claim("Department",model.Department);
+                         await _userManager.AddClaimAsync(user,claim);
+
+                         //adiciona o Role
                          await _userManager.AddToRoleAsync(user, model.Role);
+
                          user = await _userManager.FindByEmailAsync(model.Email);
                          var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                          var confirmationLink = Url.ActionLink("ConfirmEmail", "Identity", new { userId = user.Id, @token = token });
@@ -107,7 +114,11 @@ namespace IdentityNetCore.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
+
                     var user = await _userManager.FindByEmailAsync(model.Username);
+                    var userClaims = await _userManager.GetClaimsAsync(user);
+
+
                     if (await _userManager.IsInRoleAsync(user, "Member"))
                     {
                         return RedirectToAction("Member", "Home");
